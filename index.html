@@ -15,14 +15,17 @@
 </head>
 
 <body>
-    <header class="header">
-        <div class="container">
+    <nav class="floating-nav">
+        <div class="nav-container">
             <div class="logo">CAMPUS COMPANION</div>
-            <div class="header-divider"></div>
+            <div class="nav-actions">
+                <a href="login.html" class="btn-nav-link">Login</a>
+                <a href="signup.html" class="btn btn-primary" style="padding: 0.5rem 1rem;">Sign Up</a>
+            </div>
         </div>
-    </header>
+    </nav>
 
-    <main>
+    <main style="padding-top: 6rem;">
         <section class="hero container">
             <h1>Your AI-Powered Study Partner</h1>
             <p class="hero-subtitle">Upload your syllabus, lecture notes, and assignments. Get instant, context-aware
@@ -78,7 +81,7 @@
         <section class="bottom-cta container">
             <div class="bottom-cta-divider"></div>
             <h2>Ready to study smarter?</h2>
-            <button class="btn btn-primary">Get Started</button>
+            <button class="btn btn-primary" onclick="window.location.href='signup.html'">Get Started</button>
         </section>
 
         <section class="contact-section container">
