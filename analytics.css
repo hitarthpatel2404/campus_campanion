@@ -1,0 +1,375 @@
+:root {
+    --bg-main: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #6e6e6e;
+    --border-color: #e5e5e5;
+    --green-bg: #0b2e13; /* The dark green in the image */
+    --green-text: #16a34a;
+    --red-text: #dc2626;
+    --font-family: 'Inter', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+/* Header */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+}
+
+.header-title h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.02em;
+}
+
+.header-title p {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: var(--font-family);
+    transition: all 0.2s;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn:hover {
+    background-color: #f9f9f9;
+}
+
+.btn i {
+    width: 14px;
+    height: 14px;
+}
+
+/* KPI Cards */
+.kpi-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+    margin-bottom: 1.25rem;
+}
+
+.card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.card-value {
+    font-size: 2.25rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+}
+
+.card-trend {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.card-trend.positive { color: var(--green-text); }
+.card-trend.negative { color: var(--red-text); }
+
+/* Diagnostics Section */
+.diagnostics-section {
+    background-color: var(--green-bg);
+    border-radius: 12px;
+    padding: 2.5rem 3rem;
+    color: white;
+    margin-bottom: 3rem;
+}
+
+.diagnostics-subtitle {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.5);
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.diagnostics-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 2rem 0;
+}
+
+.diagnostics-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.diagnostics-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.diagnostics-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.item-left {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.item-rank {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.item-name {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.item-right {
+    display: flex;
+    gap: 0.35rem;
+    align-items: baseline;
+}
+
+.item-value {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.item-label {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.7rem;
+}
+
+/* Bottom Grid */
+.bottom-grid {
+    display: flex;
+    gap: 4rem;
+}
+
+.recent-queries, .query-volume {
+    flex: 1;
+}
+
+.vertical-divider {
+    width: 1px;
+    background-color: var(--border-color);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.section-header h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.badge {
+    font-size: 0.7rem;
+    color: #64748b; /* slate greyish */
+    background: none;
+    font-weight: 500;
+}
+
+/* Query List */
+.query-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.query-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.query-item:last-child {
+    border-bottom: none;
+}
+
+.query-user {
+    width: 35%;
+}
+
+.query-user-name {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.query-user-course {
+    display: block;
+    font-size: 0.65rem;
+    color: #94a3b8; /* slate-400 */
+    font-weight: 600;
+    margin-top: 0.15rem;
+}
+
+.query-text {
+    width: 45%;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.query-time {
+    width: 20%;
+    text-align: right;
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+/* Volume List */
+.volume-list {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2.5rem;
+}
+
+.volume-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.65rem 0;
+}
+
+.volume-course {
+    width: 70px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.volume-bar-container {
+    flex: 1;
+    height: 6px;
+    background-color: #e2e8f0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.volume-bar {
+    height: 100%;
+    background-color: #475569; /* slate-600 */
+    border-radius: 3px;
+}
+
+.volume-value {
+    width: 30px;
+    text-align: right;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Insight Card */
+.insight-card {
+    background-color: #f8fafc; /* very light slate */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.insight-title {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.insight-card p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #475569;
+    line-height: 1.5;
+}
+
+@media (max-width: 992px) {
+    .bottom-grid {
+        flex-direction: column;
+        gap: 3rem;
+    }
+    .vertical-divider {
+        display: none;
+    }
+}
+@media (max-width: 768px) {
+    .kpi-cards {
+        grid-template-columns: 1fr;
+    }
+    .dashboard-header {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    .diagnostics-section {
+        padding: 1.5rem;
+    }
+}

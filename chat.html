@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - AI Campus Companion</title>
+    <link rel="stylesheet" href="chat.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-layout">
+        <header class="app-header">
+            <div class="header-left">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                </svg>
+                <span class="brand">AI Campus Companion</span>
+            </div>
+            <div class="header-right">
+                <span class="semester-info">Semester-5th 2026</span>
+                <span class="status-badge">System Online</span>
+            </div>
+        </header>
+
+        <div class="main-container">
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <span class="sidebar-subtitle">RAG KNOWLEDGE BASE</span>
+                    <h2>Active Context Files</h2>
+                </div>
+                
+                <div class="file-list">
+                    <!-- Files will be injected here dynamically -->
+                </div>
+
+                <div class="sidebar-footer">
+                    <p>These documents are parsed to provide immediate, verified answers about your courses and schedules.</p>
+                </div>
+            </aside>
+
+            <main class="chat-area">
+                <div class="chat-history">
+                    <!-- Chat messages will be injected here dynamically -->
+                </div>
+
+                <div class="chat-input-area">
+                    <!-- Suggested queries removed per user request -->
+                    
+                    <div class="input-box">
+                        <div class="input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <input type="text" placeholder="Ask about CS101, schedules, or assignment deliverables...">
+                        <button class="btn-ask">Ask</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
