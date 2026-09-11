@@ -38,6 +38,13 @@ h1, h2, h3, .logo {
     padding: 0 2rem;
 }
 
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
 /* Floating Navbar */
 .floating-nav {
     position: fixed;
