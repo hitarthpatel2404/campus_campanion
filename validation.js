@@ -34,9 +34,15 @@ document.addEventListener('DOMContentLoaded', () => {
             clearErrors(loginForm);
             let isValid = true;
             
+            const usernameInput = loginForm.querySelector('input[type="text"]');
             const emailInput = loginForm.querySelector('input[type="email"]');
             const passwordInput = loginForm.querySelector('input[type="password"]');
             
+            if (usernameInput.value.trim() === '') {
+                showError(usernameInput, 'Please enter your username.');
+                isValid = false;
+            }
+
             if (!validateEmail(emailInput.value)) {
                 showError(emailInput, 'Please enter a valid email address.');
                 isValid = false;
@@ -106,32 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Google Sign-in Mock Modal logic
-    const googleBtns = document.querySelectorAll('.btn-google');
-    const googleModal = document.getElementById('google-mock-modal');
-    
-    googleBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (googleModal) {
-                googleModal.classList.add('active');
-            }
-        });
-    });
 
-    window.loginWithGoogle = function(name) {
-        if (googleModal) googleModal.classList.remove('active');
-        const btns = document.querySelectorAll('.btn-google');
-        btns.forEach(btn => {
-            btn.innerHTML = 'Connecting...';
-            btn.style.opacity = '0.7';
-            btn.style.pointerEvents = 'none';
-        });
-        
-        setTimeout(() => {
-            window.location.href = 'dashboard.html';
-        }, 800);
-    };
 
     // Chat Input Validation
     const chatInputArea = document.querySelector('.chat-input-area');
@@ -174,10 +155,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Google Identity Services callback
-window.handleCredentialResponse = (response) => {
-    console.log("Encoded JWT ID token: " + response.credential);
-    // You would typically send this token to your backend here
-    // For now, redirect to dashboard as a mock login success
-    window.location.href = 'dashboard.html';
-};
+
