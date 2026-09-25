@@ -53,7 +53,7 @@ h1, h2, h3, .logo {
     transform: translateX(-50%);
     width: 90%;
     max-width: 1000px;
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.5);
@@ -63,7 +63,7 @@ h1, h2, h3, .logo {
     justify-content: space-between;
     align-items: center;
     z-index: 1000;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
 .floating-nav .logo {
@@ -136,12 +136,15 @@ h1, h2, h3, .logo {
 .hero {
     text-align: center;
     margin-bottom: 5rem;
+    margin-top: 2rem;
 }
 
 .hero h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem !important;
     color: #2a2a2a;
+    font-weight: 600;
+    line-height: 1.2;
 }
 
 .hero-subtitle {
