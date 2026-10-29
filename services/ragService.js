@@ -1,11 +1,56 @@
 /**
  * RAG (Retrieval-Augmented Generation) Service
  * Combines MongoDB context retrieval with AI generation (Google Gemini + Local Intelligent Fallback)
+ * Includes robust offline fallback so the app works seamlessly even without a running MongoDB service.
  */
 
+const mongoose = require('mongoose');
 const Document = require('../models/Document');
 const QueryLog = require('../models/QueryLog');
-const { findRelevantChunks } = require('./embeddingService');
+const { findRelevantChunks, generateLocalEmbedding } = require('./embeddingService');
+const { dummyDocuments } = require('../seed');
+
+// Disable Mongoose command buffering so queries don't hang when DB is disconnected
+mongoose.set('bufferCommands', false);
+
+// In-memory query log cache for offline demo / fallback mode
+const inMemoryQueryLogs = [
+    {
+        question: "What is the penalty if I submit my CS101 assignment late?",
+        answer: "Late submissions are penalized at 10% per 24-hour period for up to 48 hours.",
+        course: "CS101",
+        resolved: true,
+        responseTimeMs: 95,
+        createdAt: new Date(Date.now() - 3600000)
+    },
+    {
+        question: "What are the library hours on weekends?",
+        answer: "On weekends, Main Library is open 9:00 AM to 9:00 PM.",
+        course: "Campus IT",
+        resolved: true,
+        responseTimeMs: 80,
+        createdAt: new Date(Date.now() - 7200000)
+    }
+];
+
+// Ensure dummy documents have local embeddings initialized
+function ensureEmbeddings(docs) {
+    if (!docs || !Array.isArray(docs)) return [];
+    for (const doc of docs) {
+        if (doc && doc.chunks) {
+            for (const chunk of doc.chunks) {
+                if (!chunk.embedding || chunk.embedding.length === 0) {
+                    const textToEmbed = `${chunk.sectionTitle || ''} ${chunk.content || ''} ${(chunk.keywords || []).join(' ')}`;
+                    chunk.embedding = generateLocalEmbedding(textToEmbed);
+                }
+            }
+        }
+    }
+    return docs;
+}
+
+// Pre-initialize embeddings on dummy documents
+ensureEmbeddings(dummyDocuments);
 
 // Optional Google Generative AI
 let GoogleGenerativeAI = null;
@@ -38,34 +83,39 @@ function generateLocalAnswer(question, relevantChunks) {
         answer += `${sec.content}\n\n`;
     }
 
-    answer += `*Sources verified from your course documents.*`;
+    answer += `*Sources verified from your campus documents.*`;
     return answer;
 }
 
 /**
  * Executes the full RAG pipeline:
- * 1. RETRIEVAL: Searches MongoDB for the most semantically relevant chunks
- * 2. AUGMENTATION: Formats the retrieved text as verified context
- * 3. GENERATION: Passes context to Gemini LLM or Local Generator to produce grounded answer
- * 4. LOGGING: Records query in MongoDB QueryLog
- *
- * @param {string} question 
- * @returns {Promise<Object>} Answer with sources and latency
+ * 1. RETRIEVAL: Searches MongoDB (or in-memory verified docs if offline)
+ * 2. AUGMENTATION: Formats retrieved text as verified context
+ * 3. GENERATION: Passes context to Gemini LLM or Local Grounded Generator
+ * 4. LOGGING: Records query in MongoDB or in-memory store
  */
 async function processRagQuery(question) {
     const startTime = Date.now();
+    let activeDocs = [];
 
-    // 1. RETRIEVE all active documents from MongoDB
-    const activeDocs = await Document.find({ isActive: true });
+    // 1. Check if MongoDB is connected and query active documents
+    if (mongoose.connection.readyState === 1) {
+        try {
+            activeDocs = await Document.find({ isActive: true });
+        } catch (dbErr) {
+            console.warn('MongoDB query failed, using in-memory documents:', dbErr.message);
+            activeDocs = dummyDocuments;
+        }
+    } else {
+        activeDocs = dummyDocuments;
+    }
 
     if (!activeDocs || activeDocs.length === 0) {
-        return {
-            answer: "No active documents found in the database. Please run 'npm run seed' to initialize the knowledge base.",
-            sources: [],
-            contextUsed: false,
-            responseTimeMs: Date.now() - startTime
-        };
+        activeDocs = dummyDocuments;
     }
+
+    // Ensure all chunks have embeddings
+    ensureEmbeddings(activeDocs);
 
     // Find top 3 most relevant chunks
     const relevantChunks = findRelevantChunks(question, activeDocs, 3);
@@ -121,22 +171,29 @@ CAMPUS COMPANION ANSWER:`;
         similarityScore: Math.round(c.score * 100)
     }));
 
-    // 4. LOG to MongoDB QueryLog for analytics
-    try {
-        await QueryLog.create({
-            question,
-            answer,
-            sources: formattedSources.map(s => ({
-                title: s.title,
-                sectionTitle: s.sectionTitle,
-                similarityScore: s.similarityScore
-            })),
-            course: relevantChunks[0]?.course || 'General',
-            resolved: hasSufficientContext,
-            responseTimeMs
-        });
-    } catch (logErr) {
-        console.error('Error logging query to MongoDB:', logErr.message);
+    // 4. Log to MongoDB if online, or in-memory array if offline
+    const logItem = {
+        question,
+        answer,
+        sources: formattedSources.map(s => ({
+            title: s.title,
+            sectionTitle: s.sectionTitle,
+            similarityScore: s.similarityScore
+        })),
+        course: relevantChunks[0]?.course || 'General',
+        resolved: hasSufficientContext,
+        responseTimeMs,
+        createdAt: new Date()
+    };
+
+    if (mongoose.connection.readyState === 1) {
+        try {
+            await QueryLog.create(logItem);
+        } catch (logErr) {
+            inMemoryQueryLogs.push(logItem);
+        }
+    } else {
+        inMemoryQueryLogs.push(logItem);
     }
 
     return {
@@ -148,5 +205,6 @@ CAMPUS COMPANION ANSWER:`;
 }
 
 module.exports = {
-    processRagQuery
+    processRagQuery,
+    inMemoryQueryLogs
 };
