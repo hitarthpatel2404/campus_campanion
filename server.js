@@ -27,6 +27,9 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/campus
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+const distPath = path.join(__dirname, 'dist');
+app.use(express.static(distPath));
 app.use(express.static(path.join(__dirname)));
 
 // 1. Health & Status
@@ -126,11 +129,24 @@ app.get('/api/analytics', async (req, res) => {
     }
 });
 
+// Fallback to React index.html for client-side routing
+app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    const indexPath = path.join(distPath, 'index.html');
+    const fs = require('fs');
+    if (fs.existsSync(indexPath)) {
+        return res.sendFile(indexPath);
+    }
+    next();
+});
+
 // Connect to MongoDB and start server
 async function startServer() {
     try {
         console.log(`Connecting to MongoDB at: ${MONGODB_URI}...`);
-        await mongoose.connect(MONGODB_URI);
+        await mongoose.connect(MONGODB_URI, {
+            serverSelectionTimeoutMS: 3000
+        });
         console.log('✓ MongoDB Connected Successfully!');
 
         // Check if DB is already seeded, if not, auto-seed with the 3 dummy entries
@@ -151,8 +167,8 @@ async function startServer() {
         app.listen(PORT, () => {
             console.log(`\n==================================================`);
             console.log(`🚀 Campus Companion Server running at: http://localhost:${PORT}`);
-            console.log(`💬 Open Chat: http://localhost:${PORT}/chat.html`);
-            console.log(`📊 Open Dashboard: http://localhost:${PORT}/dashboard.html`);
+            console.log(`💬 Open Chat: http://localhost:${PORT}/chat`);
+            console.log(`📊 Open Dashboard: http://localhost:${PORT}/dashboard`);
             console.log(`==================================================\n`);
         });
     } catch (err) {
@@ -160,7 +176,11 @@ async function startServer() {
         console.log('\nTIP: Ensure MongoDB is running locally (mongod) or provide a valid MONGODB_URI in .env');
         console.log('Starting server in offline-demo mode for UI preview...');
         app.listen(PORT, () => {
-            console.log(`Campus Companion UI running at: http://localhost:${PORT} (Database offline)`);
+            console.log(`\n==================================================`);
+            console.log(`🚀 Campus Companion Server running at: http://localhost:${PORT} (Database offline)`);
+            console.log(`💬 Open Chat: http://localhost:${PORT}/chat`);
+            console.log(`📊 Open Dashboard: http://localhost:${PORT}/dashboard`);
+            console.log(`==================================================\n`);
         });
     }
 }

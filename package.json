@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "AI Campus Companion with RAG and MongoDB",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
