@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat - AI Campus Companion</title>
+    <title>Chat - AI Campus Companion (RAG)</title>
     <link rel="stylesheet" href="chat.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <div class="app-layout">
@@ -21,33 +23,42 @@
             </a>
             <div class="header-right">
                 <span class="semester-info">Semester-5th 2026</span>
-                <span class="status-badge">System Online</span>
+                <span class="status-badge" id="db-status-badge">
+                    <span class="status-online"></span> MongoDB RAG Active
+                </span>
             </div>
         </header>
 
         <div class="main-container">
             <aside class="sidebar">
                 <div class="sidebar-header">
-                    <span class="sidebar-subtitle">RAG KNOWLEDGE BASE</span>
+                    <span class="sidebar-subtitle">RAG KNOWLEDGE BASE (MONGODB)</span>
                     <h2>Active Context Files</h2>
                 </div>
                 
-                <div class="file-list">
-                    <!-- Files will be injected here dynamically -->
+                <div class="file-list" id="file-list">
+                    <!-- Dynamic Document Entries loaded from MongoDB will be injected here -->
+                    <div style="font-size:0.8rem; color:#94a3b8; padding:0.5rem 0;">Connecting to MongoDB...</div>
                 </div>
 
                 <div class="sidebar-footer">
-                    <p>These documents are parsed to provide immediate, verified answers about your courses and schedules.</p>
+                    <p>These documents are retrieved from MongoDB to provide immediate, verified answers about your courses, policies, and schedules.</p>
                 </div>
             </aside>
 
             <main class="chat-area">
-                <div class="chat-history">
+                <div class="chat-history" id="chat-history">
                     <!-- Chat messages will be injected here dynamically -->
                 </div>
 
                 <div class="chat-input-area">
-                    <!-- Suggested queries removed per user request -->
+                    <!-- Quick RAG Prompts to try immediately -->
+                    <div class="quick-prompts-bar">
+                        <button class="quick-prompt-btn" data-query="What is the late submission penalty for CS101?">What is the late submission penalty for CS101?</button>
+                        <button class="quick-prompt-btn" data-query="When is the CS101 final exam and where?">When is the CS101 final exam and where?</button>
+                        <button class="quick-prompt-btn" data-query="What are the university library hours on weekends?">What are the library hours on weekends?</button>
+                        <button class="quick-prompt-btn" data-query="What are Dr. Sharma's office hours and room number?">Dr. Sharma's office hours</button>
+                    </div>
                     
                     <div class="input-box">
                         <div class="input-icon">
@@ -55,12 +66,15 @@
                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                             </svg>
                         </div>
-                        <input type="text" placeholder="Ask about CS101, schedules, or assignment deliverables...">
-                        <button class="btn-ask">Ask</button>
+                        <input type="text" id="user-input" placeholder="Ask about CS101 grading, library rules, or exam dates..." autocomplete="off">
+                        <button class="btn-ask" id="btn-ask">Ask</button>
                     </div>
                 </div>
             </main>
         </div>
     </div>
+
+    <!-- Client-side RAG interaction script -->
+    <script src="chat.js"></script>
 </body>
 </html>

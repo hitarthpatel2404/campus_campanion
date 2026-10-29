@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+
+# Environment Variables & Secrets
+.env
+
+# Local Environment & Temp Files
+powershell.cmd
+.DS_Store
+Thumbs.db
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
