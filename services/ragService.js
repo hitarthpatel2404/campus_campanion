@@ -3,9 +3,11 @@
  * Combines MongoDB context retrieval with AI generation (Google Gemini + Local Intelligent Fallback)
  */
 
+const mongoose = require('mongoose');
 const Document = require('../models/Document');
 const QueryLog = require('../models/QueryLog');
-const { findRelevantChunks } = require('./embeddingService');
+const { findRelevantChunks, generateLocalEmbedding } = require('./embeddingService');
+const { dummyDocuments } = require('../seed');
 
 // Optional Google Generative AI
 let GoogleGenerativeAI = null;
@@ -55,16 +57,24 @@ function generateLocalAnswer(question, relevantChunks) {
 async function processRagQuery(question) {
     const startTime = Date.now();
 
-    // 1. RETRIEVE all active documents from MongoDB
-    const activeDocs = await Document.find({ isActive: true });
+    // 1. RETRIEVE active documents from MongoDB or fallback to built-in knowledge base
+    let activeDocs = [];
+    if (mongoose.connection.readyState === 1) {
+        try {
+            activeDocs = await Document.find({ isActive: true });
+        } catch (e) {
+            console.warn('Error reading documents from MongoDB, using in-memory documents:', e.message);
+        }
+    }
 
     if (!activeDocs || activeDocs.length === 0) {
-        return {
-            answer: "No active documents found in the database. Please run 'npm run seed' to initialize the knowledge base.",
-            sources: [],
-            contextUsed: false,
-            responseTimeMs: Date.now() - startTime
-        };
+        activeDocs = dummyDocuments.map(d => ({
+            ...d,
+            chunks: d.chunks.map(c => ({
+                ...c,
+                embedding: c.embedding || generateLocalEmbedding(`${c.sectionTitle} ${c.content} ${(c.keywords || []).join(' ')}`)
+            }))
+        }));
     }
 
     // Find top 3 most relevant chunks
