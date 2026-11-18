@@ -174,8 +174,6 @@ const inMemoryQueryLogs = loadPersistedLogs(initialFallbackLogs);
 
 // In-memory document storage loaded from persistent storage (survives restarts/logouts)
 const inMemoryDocuments = loadPersistedDocuments();
-=======
->>>>>>> origin/main
 
 // Optional Google Generative AI
 let GoogleGenerativeAI = null;
