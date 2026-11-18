@@ -8,3 +8,5 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 22.12.0
+      - key: MONGODB_URI
+        value: mongodb+srv://hitarthpatel240407_db_user:1234@cluster0.ug4dh0f.mongodb.net/campus_companion?retryWrites=true&w=majority

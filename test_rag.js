@@ -12,7 +12,7 @@ try {
 const mongoose = require('mongoose');
 const { processRagQuery } = require('./services/ragService');
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/campus_companion';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://hitarthpatel240407_db_user:1234@cluster0.ug4dh0f.mongodb.net/campus_companion?retryWrites=true&w=majority';
 
 const TEST_QUESTIONS = [
     "What is the penalty if I submit my CS101 assignment late?",

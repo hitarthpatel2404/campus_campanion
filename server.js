@@ -34,7 +34,7 @@ const { generateLocalEmbedding } = require('./services/embeddingService');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/campus_companion';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://hitarthpatel240407_db_user:1234@cluster0.ug4dh0f.mongodb.net/campus_companion?retryWrites=true&w=majority';
 
 // Middleware with 50mb limit for PDF base64 payloads
 app.use(cors());
