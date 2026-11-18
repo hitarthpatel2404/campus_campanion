@@ -19,64 +19,64 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/campus
 
 const dummyDocuments = [
     {
-        title: "CS101 - Introduction to Computer Science Syllabus & Course Policies",
-        filename: "CS101_Syllabus_Fall2026.pdf",
+        title: "WAD - Web Application Development Syllabus & Lab Policies",
+        filename: "WAD_Syllabus_Policies_2026.pdf",
         fileSize: "1.8 MB",
-        course: "CS101",
+        course: "WAD",
         category: "Syllabus",
         isActive: true,
         chunks: [
             {
-                chunkId: "cs101-chunk-1",
-                sectionTitle: "Course Overview & Instructor Office Hours",
-                content: "CS101 Introduction to Computer Science is instructed by Dr. Ananya Sharma (Email: asharma@campus.edu). Office Hours are held on Mondays and Thursdays from 2:00 PM to 4:00 PM in Turing Hall, Room 402. Teaching Assistant: Rahul Verma (Lab sessions on Tuesdays 10:00 AM - 12:00 PM in Lab 3).",
-                keywords: ["instructor", "office hours", "dr ananya sharma", "room 402", "ta", "rahul verma", "cs101", "turing hall"]
+                chunkId: "wad-chunk-1",
+                sectionTitle: "Course Overview & Faculty Schedule",
+                content: "Web Application Development (WAD) is instructed by Prof. AD. Theory lectures take place in Room 402/403. Elective laboratory sessions: Batch C1 is scheduled on Thursdays 02:10 PM - 04:00 PM in Lab 4B; Batch C2 is on Fridays 03:10 PM - 05:00 PM in Lab 3A. Focus areas include Full-Stack JavaScript, React 19, Node.js, Express, and MongoDB vector search.",
+                keywords: ["wad", "web application development", "prof ad", "lab 4b", "lab 3a", "room 402", "room 403", "batch c1", "batch c2", "syllabus"]
             },
             {
-                chunkId: "cs101-chunk-2",
+                chunkId: "wad-chunk-2",
                 sectionTitle: "Grading Scheme and Weightage Breakdown",
-                content: "The grading evaluation criteria for CS101 consists of: Weekly Programming Assignments: 30%, Midterm Examination: 25%, Final Capstone Project: 25%, Pop Quizzes and Class Participation: 20%. A minimum score of 50% overall is required to pass the course with credit.",
-                keywords: ["grading", "grade breakdown", "assignments 30%", "midterm 25%", "final project 25%", "quizzes 20%", "passing marks", "evaluation"]
+                content: "WAD Semester 5 evaluation criteria: Laboratory Practical Implementation & Viva: 30%, Midterm Assessment: 25%, End-Semester Full Stack Project: 25%, Continuous Quizzes & Mini-Assignments: 20%. Minimum score required for passing credit is 50%.",
+                keywords: ["grading", "wad grading", "weightage", "assignments 30%", "midterm 25%", "project 25%", "evaluation"]
             },
             {
-                chunkId: "cs101-chunk-3",
-                sectionTitle: "Late Submission Policy & Academic Integrity",
-                content: "Assignments submitted past the deadline incur an automatic 10% penalty per 24 hours of delay, up to a maximum of 3 days (72 hours). Submissions past 72 hours receive a grade of zero. All code submissions are screened with MOSS for similarity. Plagiarism or unauthorized copying of code results in an immediate F grade and referral to the Academic Honor Board.",
-                keywords: ["late submission", "penalty 10%", "deadline", "72 hours", "plagiarism", "moss", "academic integrity", "cheating"]
+                chunkId: "wad-chunk-3",
+                sectionTitle: "Late Submission Policy & Grace Period",
+                content: "WAD lab and project submissions permit an automatic 24-hour grace period with a 10% penalty deduction. Submissions delayed past 48 hours receive zero marks. All code is checked for originality using automated AST and MOSS analysis.",
+                keywords: ["late submission", "grace period", "penalty 10%", "24 hours", "moss", "academic integrity", "deadline"]
             }
         ]
     },
     {
-        title: "Campus Library and Computing Facilities Regulations",
-        filename: "Campus_Library_and_Lab_Regulations_2026.pdf",
+        title: "DCN & Machine Learning (ML) Laboratory Regulations & Guidelines",
+        filename: "DCN_ML_Lab_Regulations_2026.pdf",
         fileSize: "2.4 MB",
-        course: "General Campus / IT Services",
+        course: "ML / DCN",
         category: "Policies",
         isActive: true,
         chunks: [
             {
-                chunkId: "lib-chunk-1",
-                sectionTitle: "Library Hours and Weekend Access",
-                content: "The Central University Library operates Monday through Friday from 8:00 AM to 10:00 PM. On Saturdays and Sundays, the library opens from 10:00 AM to 6:00 PM. During Midterm and Final examination weeks, the ground-floor reading hall remains open 24/7 for all registered students with a valid student RFID ID card.",
-                keywords: ["library hours", "timings", "weekend", "24/7", "exam week", "student id", "reading hall", "open"]
+                chunkId: "lab-chunk-1",
+                sectionTitle: "Machine Learning (ML) Lab Timetable and GPU Access",
+                content: "Machine Learning (ML) is instructed by Prof. DT. Theory classes are in Room 201/402. Lab sessions: Batch B1 on Tuesdays 02:10 PM - 04:00 PM in Lab 3A; Batch B2 on Mondays 11:10 AM - 01:00 PM in Lab 5C; Batch B3 on Mondays 02:10 PM - 04:00 PM in Lab 3A. Dedicated GPU workstations are allocated for neural networks and classification models.",
+                keywords: ["machine learning", "ml", "prof dt", "lab 5c", "lab 3a", "batch b1", "batch b2", "batch b3", "gpu", "neural networks"]
             },
             {
-                chunkId: "lib-chunk-2",
-                sectionTitle: "Book Borrowing Quotas and Late Fees",
-                content: "Undergraduate students can borrow up to 5 books concurrently for a period of 14 calendar days. Books may be renewed once through the online student portal if no hold is placed. Overdue fines accrue at ₹10 ($0.50) per day per book. Reference copies and course reserve textbooks cannot be checked out overnight.",
-                keywords: ["borrowing", "5 books", "14 days", "renewal", "overdue fines", "late fees", "reference textbooks"]
+                chunkId: "lab-chunk-2",
+                sectionTitle: "Data Communication & Networks (DCN) Lab & Wireshark Rules",
+                content: "Data Communication and Networks (DCN) is instructed by Prof. MSG in Room 402. Lab practicals: Batch B1 on Wednesdays 11:10 AM - 01:00 PM in Lab 2C; Batch B2 on Mondays 02:10 PM - 04:00 PM in Lab 2C; Batch B3 on Mondays 11:10 AM - 01:00 PM in Lab 2C. Wireshark packet capturing must strictly follow university firewall safety policies.",
+                keywords: ["dcn", "data communication", "networks", "prof msg", "lab 2c", "wireshark", "room 402", "batch b1", "batch b2", "batch b3"]
             },
             {
-                chunkId: "lib-chunk-3",
-                sectionTitle: "Computer Lab GPU Workstations and Printing Quota",
-                content: "High-performance GPU workstations in Lab 2 are reserved exclusively for students enrolled in Machine Learning, Computer Vision, and Graphics courses. Each student receives a complimentary quota of 200 black-and-white printed pages per semester at the student union print center. Food, sugary drinks, and open containers are strictly prohibited near computers.",
-                keywords: ["computer lab", "gpu workstations", "lab 2", "printing quota", "200 pages", "food rules", "printers"]
+                chunkId: "lab-chunk-3",
+                sectionTitle: "System Software (SS) & VLSI Laboratory Sessions",
+                content: "System Software (SS) is taught by Prof. VP in Room 402, with lab practicals in Lab MP (Microprocessor/Systems Lab). VLSI Design is instructed by Prof. PRG in Room 303B and Lab MP. Students must maintain lab observation logbooks signed weekly by the instructor.",
+                keywords: ["system software", "ss", "prof vp", "vlsi", "prof prg", "room 303b", "lab mp", "observation logbook"]
             }
         ]
     },
     {
-        title: "Academic Calendar & Examination Schedule (Fall Semester 2026)",
-        filename: "Academic_Calendar_Fall2026.pdf",
+        title: "Academic Calendar & Examination Schedule (Semester 5 - 2026)",
+        filename: "Academic_Calendar_Semester5_2026.pdf",
         fileSize: "1.1 MB",
         course: "Academic Affairs / Registrar",
         category: "Calendar",
@@ -84,21 +84,21 @@ const dummyDocuments = [
         chunks: [
             {
                 chunkId: "cal-chunk-1",
-                sectionTitle: "Key Semester Milestones & Add/Drop Deadlines",
-                content: "Fall Semester 2026 instruction officially commences on Monday, August 18, 2026. The final deadline for course add/drop and section changes without a 'W' transcript notation is Wednesday, September 2, 2026. The mid-semester recess is scheduled from October 5 to October 9, 2026.",
-                keywords: ["semester dates", "august 18", "add drop deadline", "september 2", "mid-semester recess", "calendar", "start date"]
+                sectionTitle: "Semester Timetable & Class Schedule",
+                content: "The official academic timetable took effect on 05/08/2026. Classes run daily Monday through Friday from 09:10 AM to 06:00 PM with common lunch break from 01:10 PM to 02:00 PM. Sports and recreational activities are scheduled on Mondays from 05:10 PM to 06:00 PM.",
+                keywords: ["semester schedule", "timetable", "august 2026", "lunch break 1:10", "sports monday", "daily hours"]
             },
             {
                 chunkId: "cal-chunk-2",
                 sectionTitle: "Midterm and Final Examination Schedule",
-                content: "Midterm assessments take place from October 12 to October 20, 2026. Final Examination week spans from December 7 to December 18, 2026. The CS101 Introduction to Computer Science final written examination is scheduled for Thursday, December 10, 2026, from 9:00 AM to 12:00 PM in Examination Hall A.",
-                keywords: ["midterms", "october 12", "final exam schedule", "december 7", "december 18", "cs101 exam date", "december 10", "hall a"]
+                content: "Midterm assessments for WAD, ML, DCN, SS, DMBI, and VLSI take place from October 12 to October 20, 2026 in Examination Block 402 and 201. Final Examination week spans from December 7 to December 18, 2026. Seating allocations will be released by the Registrar 7 days prior.",
+                keywords: ["midterms", "october 12", "final exam schedule", "december 7", "december 18", "exam hall 402", "registrar"]
             },
             {
                 chunkId: "cal-chunk-3",
-                sectionTitle: "Make-up Exam Policy and Medical Certificate Protocol",
-                content: "Students unable to sit for an examination due to severe illness or verifiable emergency must submit a medical certificate signed by the University Health Officer within 48 hours of the missed exam. Approved make-up examinations will be conducted during the special test window on December 21-22, 2026.",
-                keywords: ["make-up exam", "medical certificate", "48 hours", "emergency", "absence", "december 21"]
+                sectionTitle: "Medical Certificate Protocol and Special Exam Window",
+                content: "Students missing assessments due to genuine illness or emergency must submit a university health certificate within 48 hours to the department head. Special supplementary exams will be conducted on December 21-22, 2026.",
+                keywords: ["medical certificate", "supplementary exam", "emergency absence", "48 hours", "special test"]
             }
         ]
     }

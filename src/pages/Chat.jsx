@@ -1,43 +1,61 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import '../styles/chat.css';
-
-const INITIAL_GREETING = `Hello! I am your **AI Campus Companion** with **Retrieval-Augmented Generation (RAG)**.
-
-I have verified campus documents loaded in my **MongoDB Knowledge Base**:
-1. 📄 **CS101 Syllabus & Policies** (Office hours, grading weights, late penalties)
-2. 🏛️ **Library & Computing Facilities Regulations** (Hours, borrowing, 24/7 exam access, printing)
-3. 📅 **Academic Calendar & Exam Schedule** (Add/drop dates, midterms, CS101 final exam)
-
-Feel free to ask any question or tap one of the quick suggestions below!`;
 
 const FALLBACK_DOCS = [
     {
-        title: "CS101 - Introduction to Computer Science Syllabus & Policies",
+        title: "WAD - Web Application Development Syllabus & Lab Policies",
         fileSize: "1.8 MB",
-        course: "CS101",
+        course: "WAD",
         chunks: [1, 2, 3]
     },
     {
-        title: "Campus Library and Computing Facilities Guidelines",
+        title: "DCN & Machine Learning (ML) Laboratory Regulations & Guidelines",
         fileSize: "2.4 MB",
-        course: "Campus IT",
+        course: "ML / DCN",
         chunks: [1, 2, 3]
     },
     {
-        title: "Academic Calendar & Examination Schedule (Fall 2026)",
+        title: "Academic Calendar & Examination Schedule (Semester 5 - 2026)",
         fileSize: "1.1 MB",
-        course: "Registrar",
+        course: "Academic Affairs",
         chunks: [1, 2, 3]
     }
 ];
 
 const QUICK_PROMPTS = [
-    "What is the late submission penalty for CS101?",
-    "When is the CS101 final exam and where?",
-    "What are the university library hours on weekends?",
-    "What are Dr. Sharma's office hours and room number?"
+    "Tell me about WAD Unit 1 topics",
+    "What is the late submission policy for WAD?",
+    "When and where is the ML lab session?",
+    "What are the dates for Semester 5 midterms?",
+    "Which room is DCN lecture in on Thursdays?"
 ];
+
+function buildGreetingMessage(docs) {
+    if (!docs || docs.length === 0) {
+        return `Hello! I am your **AI Campus Companion** with **Retrieval-Augmented Generation (RAG)**.
+
+I have verified Semester 5 course documents loaded in my **MongoDB Knowledge Base**:
+1. 📄 **WAD - Web Application Development Syllabus & Lab Policies** (Prof. AD, Lab 4B & 3A, Room 402/403)
+2. 🔬 **DCN & Machine Learning (ML) Laboratory Regulations** (Prof. DT & MSG, Labs 5C & 2C)
+3. 📅 **Academic Calendar & Examination Schedule (Semester 5 - 2026)** (Timetable w.e.f. 05/08/2026, Midterms Oct 12-20)
+
+Feel free to ask any question about your courses, uploaded unit notes, or tap a quick prompt below!`;
+    }
+
+    const docItems = docs.slice(0, 5).map((d, i) => 
+        `${i + 1}. 📄 **${d.title || d.filename}** (${d.course || 'Course'} • ${d.chunks ? d.chunks.length : 3} chunks)`
+    ).join('\n');
+
+    return `Hello! I am your **AI Campus Companion** with **Retrieval-Augmented Generation (RAG)**.
+
+I have **${docs.length} active verified documents** indexed in the **MongoDB Knowledge Base**:
+${docItems}
+
+Feel free to ask anything about your course materials, unit notes, or tap one of the quick suggestions below!`;
+}
 
 function formatMarkdown(text) {
     if (!text) return '';
@@ -56,12 +74,14 @@ function formatMarkdown(text) {
 }
 
 const Chat = () => {
+    const navigate = useNavigate();
+    const { logout } = useAuth();
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([
         {
             id: 1,
             sender: 'ai',
-            text: INITIAL_GREETING,
+            text: buildGreetingMessage([]),
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             sources: []
         }
@@ -79,18 +99,53 @@ const Chat = () => {
 
     // Fetch documents and backend health
     useEffect(() => {
+        // Pre-load from local cache if present
+        try {
+            const cached = localStorage.getItem('campus_indexed_documents');
+            if (cached) {
+                const parsed = JSON.parse(cached);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    setDocuments(parsed);
+                    setIsDbOnline(true);
+                    setDbStatusText(`${parsed.length} Docs Active (RAG Ready)`);
+                    setMessages(prev => {
+                        if (prev.length === 1 && prev[0].id === 1) {
+                            return [{
+                                ...prev[0],
+                                text: buildGreetingMessage(parsed)
+                            }];
+                        }
+                        return prev;
+                    });
+                }
+            }
+        } catch (e) {}
+
         async function fetchContext() {
             try {
                 const res = await fetch('/api/documents');
                 const data = await res.json();
                 if (data.success && data.documents && data.documents.length > 0) {
                     setDocuments(data.documents);
+                    try {
+                        localStorage.setItem('campus_indexed_documents', JSON.stringify(data.documents));
+                    } catch (e) {}
                     setIsDbOnline(true);
                     if (data.source === 'mongodb') {
                         setDbStatusText(`${data.documents.length} Docs in MongoDB`);
                     } else {
                         setDbStatusText(`${data.documents.length} Docs Active (RAG Ready)`);
                     }
+                    // Dynamically update greeting with live documents
+                    setMessages(prev => {
+                        if (prev.length === 1 && prev[0].id === 1) {
+                            return [{
+                                ...prev[0],
+                                text: buildGreetingMessage(data.documents)
+                            }];
+                        }
+                        return prev;
+                    });
                 } else {
                     setDocuments(FALLBACK_DOCS);
                     setIsDbOnline(true);
@@ -195,6 +250,15 @@ const Chat = () => {
                         <span className={isDbOnline ? 'status-online' : 'status-offline'}></span>
                         {dbStatusText}
                     </span>
+                    <button 
+                        className="btn-logout" 
+                        onClick={() => { logout(); navigate('/login'); }}
+                        title="Log Out"
+                        style={{ marginLeft: '0.5rem' }}
+                    >
+                        <LogOut size={16} />
+                        <span>Log Out</span>
+                    </button>
                 </div>
             </header>
 
@@ -309,7 +373,7 @@ const Chat = () => {
                             <input 
                                 type="text" 
                                 id="user-input"
-                                placeholder="Ask about CS101 grading, library rules, or exam dates..." 
+                                placeholder="Ask about WAD Unit 1, Machine Learning, DCN, lab timings, or exam policies..." 
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
                                 onKeyDown={handleKeyPress}

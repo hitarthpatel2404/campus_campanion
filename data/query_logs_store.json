@@ -1,0 +1,176 @@
+[
+  {
+    "question": "give me about wad unit 1",
+    "answer": "Based on **WAD UNIT I** (Page 17):\n\n### Page 17\nSyllabus\nUnit Content Hrs.\n5 PHP and MySQL: Basic commands with PHP examples,\nConnection to server, creating database, selecting a database,\nlisting database, listing table names, creating a table, inserting\ndata, altering tables, Querying MySQL using PHP/ Retrieving\nfrom database, deleting database, deleting data and tables,\nProject/ Building a Web Application, exception handling,\n12\n\n### Page 18\nUNIT I\n\nAdditionally, according to **WAD UNIT I** (Page 7):\n### Page 7\nWeekly Course Outline\nUnit Topics Hours\n1 HTML5, CSS, DHTML 12\n2 JavaScript, Validation,React 6\n3 XML, XSL, XSLT 3\n4 Basics PHP,Python,Java 12\n5 Frontend+ MySQL 12\n\n*Sources verified from your campus documents.*",
+    "sources": [
+      {
+        "title": "WAD UNIT I",
+        "sectionTitle": "Page 17",
+        "similarityScore": 128
+      },
+      {
+        "title": "WAD UNIT I",
+        "sectionTitle": "Page 7",
+        "similarityScore": 124
+      },
+      {
+        "title": "WAD UNIT I",
+        "sectionTitle": "Page 19",
+        "similarityScore": 124
+      }
+    ],
+    "course": "WAD",
+    "resolved": true,
+    "responseTimeMs": 2,
+    "createdAt": "2026-11-18T06:09:00.295Z"
+  },
+  {
+    "question": "how should i prepare for questions in samplemodule question",
+    "answer": "Based on **Samplequestionmodule1** (Page 1):\n\n### Page 1\nSAMPLE QUESTIONS\nSHORT-ANSWER TYPE QUESTIONS\n1. \tWhat is human learning? Give any two examples.\n2. \tWhat are the types of human learning? Are there equivalent forms of machine learning?\n3. \tWhat is machine learning? What are key tasks of machine learning?\n4. \tExplain the concept of penalty and reward in reinforcement learning.\n5. \tWhat are concepts of learning as search?\n6. \tWhat are different objectives of machine learning? How are these related with human\nlearning?\n7. \tDefine machine learning and explain the different elements with a real example.\n8. \tExplain the process of abstraction with an example.\n9. \tWhat is generalization? What role does it play in the process of machine learning?\n10. \tWhat is classification? Explain the key differences between classification and regression.\n11. \tWhat is regression? Give example of some practical problems solved using regression.\n12. \tExplain the process of clustering in details.\n13. \tWrite short notes on any two of the following:\n1. \tApplication of machine learning algorithms\n2. \tSupervised learning\n3. \tUnsupervised learning\n4. \tReinforcement learning\nLONG-ANSWER TYPE QUESTIONS\n1. \tWhat is machine learning? Explain any two business applications of machine learning.\nWhat are the possible ethical issues of machine learning applications?\n2. \tExplain how human learning happens:\n1. \tUnder direct guidance of experts\n2. \tUnder indirect guidance of experts\n3. \tSelf-learning\n3. \tExplain the different forms of machine learning with a few examples.\n4. \tCompare the different types of machine learning.\n5. \tWhat do you mean by a well-posed learning problem? Explain important features that are\nrequired to well-define a learning problem.\n6. \tCan all problems be solved using machine learning? Explain your response in detail.\n7. \tWhat are different tools and technologies available for solving problems in machine\nlearning? Give details about any two of them.\n\nAdditionally, according to **Samplequestionmodule1** (Page 2):\n### Page 2\n8. \tWhat are the different types of supervised learning? Explain them with a sample\napplication in each area.\n9. \tWhat are the different types of unsupervised learning? Explain them difference with a\nsample application in each area.\n10. \tExplain, in details, the process of machine learning.\n11. \tWrite short notes on any two:\n1. \tMATLAB\n2. \tApplication of machine learning in Healthcare\n3. \tMarket basket analysis\n4. \tSimple linear regression\n12. \tWrite the difference between:\n1. \tAbstraction and generalization\n2. \tSupervised and unsupervised learning\n3. \tClassification and regression\n\n*Sources verified from your campus documents.*",
+    "sources": [
+      {
+        "title": "Samplequestionmodule1",
+        "sectionTitle": "Page 1",
+        "similarityScore": 58
+      },
+      {
+        "title": "Samplequestionmodule1",
+        "sectionTitle": "Page 2",
+        "similarityScore": 40
+      },
+      {
+        "title": "Academic Calendar & Examination Schedule (Semester 5 - 2026)",
+        "sectionTitle": "Midterm and Final Examination Schedule",
+        "similarityScore": 28
+      }
+    ],
+    "course": "ML",
+    "resolved": true,
+    "responseTimeMs": 1,
+    "createdAt": "2026-11-18T06:07:31.676Z"
+  },
+  {
+    "question": "give me questions in samplequestion module 1",
+    "answer": "Based on **Samplequestionmodule1** (Page 1):\n\n### Page 1\nSAMPLE QUESTIONS\nSHORT-ANSWER TYPE QUESTIONS\n1. \tWhat is human learning? Give any two examples.\n2. \tWhat are the types of human learning? Are there equivalent forms of machine learning?\n3. \tWhat is machine learning? What are key tasks of machine learning?\n4. \tExplain the concept of penalty and reward in reinforcement learning.\n5. \tWhat are concepts of learning as search?\n6. \tWhat are different objectives of machine learning? How are these related with human\nlearning?\n7. \tDefine machine learning and explain the different elements with a real example.\n8. \tExplain the process of abstraction with an example.\n9. \tWhat is generalization? What role does it play in the process of machine learning?\n10. \tWhat is classification? Explain the key differences between classification and regression.\n11. \tWhat is regression? Give example of some practical problems solved using regression.\n12. \tExplain the process of clustering in details.\n13. \tWrite short notes on any two of the following:\n1. \tApplication of machine learning algorithms\n2. \tSupervised learning\n3. \tUnsupervised learning\n4. \tReinforcement learning\nLONG-ANSWER TYPE QUESTIONS\n1. \tWhat is machine learning? Explain any two business applications of machine learning.\nWhat are the possible ethical issues of machine learning applications?\n2. \tExplain how human learning happens:\n1. \tUnder direct guidance of experts\n2. \tUnder indirect guidance of experts\n3. \tSelf-learning\n3. \tExplain the different forms of machine learning with a few examples.\n4. \tCompare the different types of machine learning.\n5. \tWhat do you mean by a well-posed learning problem? Explain important features that are\nrequired to well-define a learning problem.\n6. \tCan all problems be solved using machine learning? Explain your response in detail.\n7. \tWhat are different tools and technologies available for solving problems in machine\nlearning? Give details about any two of them.\n\nAdditionally, according to **Samplequestionmodule1** (Page 2):\n### Page 2\n8. \tWhat are the different types of supervised learning? Explain them with a sample\napplication in each area.\n9. \tWhat are the different types of unsupervised learning? Explain them difference with a\nsample application in each area.\n10. \tExplain, in details, the process of machine learning.\n11. \tWrite short notes on any two:\n1. \tMATLAB\n2. \tApplication of machine learning in Healthcare\n3. \tMarket basket analysis\n4. \tSimple linear regression\n12. \tWrite the difference between:\n1. \tAbstraction and generalization\n2. \tSupervised and unsupervised learning\n3. \tClassification and regression\n\n*Sources verified from your campus documents.*",
+    "sources": [
+      {
+        "title": "Samplequestionmodule1",
+        "sectionTitle": "Page 1",
+        "similarityScore": 90
+      },
+      {
+        "title": "Samplequestionmodule1",
+        "sectionTitle": "Page 2",
+        "similarityScore": 75
+      },
+      {
+        "title": "Academic Calendar & Examination Schedule (Semester 5 - 2026)",
+        "sectionTitle": "Semester Timetable & Class Schedule",
+        "similarityScore": 19
+      }
+    ],
+    "course": "ML",
+    "resolved": true,
+    "responseTimeMs": 1,
+    "createdAt": "2026-11-18T06:06:47.100Z"
+  },
+  {
+    "question": "What is the late submission policy for WAD Assignment 1?",
+    "answer": "According to course policies, assignments submitted within 24 hours of the deadline incur a 10% penalty. Submissions beyond 48 hours receive zero credit.",
+    "course": "WAD",
+    "resolved": true,
+    "responseTimeMs": 85,
+    "sources": [
+      {
+        "title": "WAD Course Syllabus & Policies",
+        "sectionTitle": "Grading & Late Submissions",
+        "similarityScore": 92
+      }
+    ],
+    "createdAt": "2026-11-18T04:59:39.631Z"
+  },
+  {
+    "question": "When is the ML lab session for Batch B2 and where is it held?",
+    "answer": "Machine Learning (ML) lab for Batch B2 is held on Mondays from 11:10 AM to 01:00 PM in Lab 5C with Prof. DT.",
+    "course": "ML",
+    "resolved": true,
+    "responseTimeMs": 78,
+    "sources": [
+      {
+        "title": "Campus Academic Timetable 2026",
+        "sectionTitle": "Monday Schedule",
+        "similarityScore": 96
+      }
+    ],
+    "createdAt": "2026-11-18T03:59:39.631Z"
+  },
+  {
+    "question": "Which room is DCN lecture scheduled in on Thursday?",
+    "answer": "DCN lecture on Thursday is scheduled from 11:10 AM to 12:00 PM in Room 402 with Prof. MSG.",
+    "course": "DCN",
+    "resolved": true,
+    "responseTimeMs": 92,
+    "sources": [
+      {
+        "title": "Campus Academic Timetable 2026",
+        "sectionTitle": "Thursday Schedule",
+        "similarityScore": 94
+      }
+    ],
+    "createdAt": "2026-11-18T02:59:39.631Z"
+  },
+  {
+    "question": "What are the timings for the WAD Elective Lab for Batch C1?",
+    "answer": "WAD-EL (Elective Lab) for Batch C1 takes place on Thursdays from 02:10 PM to 04:00 PM in Lab 4B with Prof. AD.",
+    "course": "WAD",
+    "resolved": true,
+    "responseTimeMs": 110,
+    "sources": [
+      {
+        "title": "Campus Academic Timetable 2026",
+        "sectionTitle": "Thursday Electives",
+        "similarityScore": 95
+      }
+    ],
+    "createdAt": "2026-11-18T01:59:39.631Z"
+  },
+  {
+    "question": "Can I access the computing lab during weekends?",
+    "answer": "Yes, computing labs and the main university library are open on weekends from 09:00 AM to 09:00 PM with student RFID badge access.",
+    "course": "Campus IT",
+    "resolved": true,
+    "responseTimeMs": 88,
+    "sources": [
+      {
+        "title": "Campus Library and Computing Facilities Guidelines",
+        "sectionTitle": "Weekend Lab Access",
+        "similarityScore": 89
+      }
+    ],
+    "createdAt": "2026-11-18T00:59:39.631Z"
+  },
+  {
+    "question": "When are midterm examinations scheduled?",
+    "answer": "Midterm examinations will take place from October 12 to October 17, 2026. Hall allocations will be published one week prior by the Registrar.",
+    "course": "Registrar",
+    "resolved": true,
+    "responseTimeMs": 98,
+    "sources": [
+      {
+        "title": "Academic Calendar & Examination Schedule",
+        "sectionTitle": "Midterm Examination Period",
+        "similarityScore": 91
+      }
+    ],
+    "createdAt": "2026-11-17T23:59:39.631Z"
+  },
+  {
+    "question": "What compiler version is required for System Software (SS) lab?",
+    "answer": "Compiler configuration details are being verified. Please consult Prof. VP directly during office hours in Room 402.",
+    "course": "SS",
+    "resolved": false,
+    "responseTimeMs": 135,
+    "sources": [],
+    "createdAt": "2026-11-17T22:59:39.631Z"
+  }
+]

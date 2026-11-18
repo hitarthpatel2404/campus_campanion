@@ -20,7 +20,15 @@ const path = require('path');
 
 const Document = require('./models/Document');
 const QueryLog = require('./models/QueryLog');
-const { processRagQuery, inMemoryQueryLogs } = require('./services/ragService');
+const { 
+    processRagQuery, 
+    indexAndSaveDocument, 
+    deleteDocument, 
+    getRealAnalytics, 
+    resetPersistedDocuments,
+    inMemoryDocuments,
+    inMemoryQueryLogs 
+} = require('./services/ragService');
 const { dummyDocuments } = require('./seed');
 const { generateLocalEmbedding } = require('./services/embeddingService');
 
@@ -28,9 +36,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/campus_companion';
 
-// Middleware
+// Middleware with 50mb limit for PDF base64 payloads
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 const distPath = path.join(__dirname, 'dist');
 app.use(express.static(distPath));
@@ -61,16 +70,17 @@ app.get('/api/health', async (req, res) => {
 app.get('/api/documents', async (req, res) => {
     try {
         if (mongoose.connection.readyState === 1) {
-            const docs = await Document.find({ isActive: true }).select('-chunks.embedding');
+            const docs = await Document.find({ isActive: true }).select('-chunks.embedding').sort({ createdAt: -1 });
             if (docs && docs.length > 0) {
                 return res.json({ success: true, count: docs.length, documents: docs, source: 'mongodb' });
             }
         }
-        // Fallback to in-memory verified documents
+        // Return in-memory documents
         res.json({
             success: true,
-            count: dummyDocuments.length,
-            documents: dummyDocuments.map(d => ({
+            count: inMemoryDocuments.length,
+            documents: inMemoryDocuments.map(d => ({
+                _id: d._id,
                 title: d.title,
                 filename: d.filename,
                 fileSize: d.fileSize,
@@ -89,16 +99,128 @@ app.get('/api/documents', async (req, res) => {
     } catch (err) {
         res.json({
             success: true,
-            count: dummyDocuments.length,
-            documents: dummyDocuments,
+            count: inMemoryDocuments.length,
+            documents: inMemoryDocuments,
             source: 'in-memory-fallback'
         });
     }
 });
 
-// 3. Seed 3 Dummy Documents directly via API
+// 2b. Upload and Index a New Document (Chunked + Vector Embeddings into MongoDB)
+app.post('/api/documents/upload', async (req, res) => {
+    try {
+        const { title, filename, fileSize, course, category, content } = req.body;
+        
+        if (!content || typeof content !== 'string' || content.trim().length === 0) {
+            return res.status(400).json({ success: false, error: 'Document text content is required for indexing.' });
+        }
+
+        const savedDoc = await indexAndSaveDocument({
+            title: title || filename,
+            filename: filename || 'Uploaded_Document.pdf',
+            fileSize: fileSize || '1.0 MB',
+            course: course || 'General',
+            category: category || 'Syllabus',
+            content: content.trim()
+        });
+
+        res.json({
+            success: true,
+            message: `Document "${savedDoc.title}" indexed and embedded successfully into knowledge base! Ready for AI Chat.`,
+            document: savedDoc,
+            chunkCount: savedDoc.chunks.length,
+            source: mongoose.connection.readyState === 1 ? 'mongodb' : 'in-memory'
+        });
+    } catch (err) {
+        console.error('Document indexing error:', err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// 2c. Delete Document by ID
+app.delete('/api/documents/:id', async (req, res) => {
+    try {
+        await deleteDocument(req.params.id);
+        res.json({ success: true, message: 'Document deleted successfully from knowledge base.' });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// 2d. Document Plain-Text Extraction Endpoint (PDF, Markdown, TXT, JSON, CSV)
+app.post('/api/documents/extract', async (req, res) => {
+    try {
+        const { base64Data, filename } = req.body;
+        if (!base64Data) {
+            return res.status(400).json({ success: false, error: 'No file data received.' });
+        }
+
+        const cleanBase64 = base64Data.replace(/^data:[^;]+;base64,/, '');
+        const fileBuffer = Buffer.from(cleanBase64, 'base64');
+        const isPdf = !filename || filename.toLowerCase().endsWith('.pdf');
+
+        if (isPdf) {
+            const { PDFParse } = require('pdf-parse');
+            const parser = new PDFParse({ data: fileBuffer });
+            const result = await parser.getText();
+            await parser.destroy().catch(() => {});
+
+            let fullText = '';
+            if (result.pages && Array.isArray(result.pages) && result.pages.length > 0) {
+                fullText = result.pages
+                    .map((p, idx) => {
+                        const pageText = (p.text || '').trim();
+                        if (!pageText) return '';
+                        return `### Page ${p.num || idx + 1}\n${pageText}`;
+                    })
+                    .filter(Boolean)
+                    .join('\n\n');
+            }
+
+            if (!fullText.trim() && result.text) {
+                fullText = result.text.trim();
+            }
+
+            fullText = fullText.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n');
+
+            if (!fullText.trim()) {
+                return res.json({
+                    success: true,
+                    text: '',
+                    pageCount: result.total || 0,
+                    warning: 'This PDF does not appear to contain selectable text (it may be scanned images). You can type or paste syllabus notes directly.'
+                });
+            }
+
+            return res.json({
+                success: true,
+                text: fullText,
+                pageCount: result.total || (result.pages ? result.pages.length : 1),
+                characterCount: fullText.length
+            });
+        } else {
+            // Text, markdown, JSON, CSV
+            const text = fileBuffer.toString('utf-8');
+            return res.json({
+                success: true,
+                text: text,
+                characterCount: text.length
+            });
+        }
+    } catch (err) {
+        console.error('File extraction error:', err);
+        res.status(500).json({
+            success: false,
+            error: `Failed to extract text from document: ${err.message}`
+        });
+    }
+});
+
+// 3. Seed 3 Dummy Documents directly via API (resets both DB and disk persistence)
 app.post('/api/documents/seed', async (req, res) => {
     try {
+        resetPersistedDocuments();
+
         if (mongoose.connection.readyState === 1) {
             await Document.deleteMany({});
 
@@ -121,9 +243,9 @@ app.post('/api/documents/seed', async (req, res) => {
 
         res.json({
             success: true,
-            message: `Active in-memory knowledge base initialized with ${dummyDocuments.length} documents.`,
+            message: `Active knowledge base reset with ${dummyDocuments.length} default documents.`,
             count: dummyDocuments.length,
-            source: 'in-memory'
+            source: 'in-memory-persisted'
         });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
@@ -152,53 +274,17 @@ app.post('/api/rag/chat', async (req, res) => {
     }
 });
 
-// 5. Analytics Endpoint (for Faculty Analytics & Dashboard)
+// 5. Analytics Endpoint (REAL Telemetry - no static placeholders)
 app.get('/api/analytics', async (req, res) => {
     try {
-        if (mongoose.connection.readyState === 1) {
-            const totalQueries = await QueryLog.countDocuments();
-            const unresolvedQueries = await QueryLog.countDocuments({ resolved: false });
-            const recentLogs = await QueryLog.find().sort({ createdAt: -1 }).limit(10);
-            
-            const avgAgg = await QueryLog.aggregate([
-                { $group: { _id: null, avgTime: { $avg: '$responseTimeMs' } } }
-            ]);
-            const avgResponseTime = avgAgg.length > 0 ? Math.round(avgAgg[0].avgTime) : 120;
-
-            return res.json({
-                success: true,
-                totalQueries,
-                unresolvedQueries,
-                avgResponseTime: `${avgResponseTime}ms`,
-                recentQueries: recentLogs,
-                source: 'mongodb'
-            });
-        }
-
-        // Return in-memory analytics
-        const total = inMemoryQueryLogs.length;
-        const unresolved = inMemoryQueryLogs.filter(q => !q.resolved).length;
-        const avgTime = total > 0 
-            ? Math.round(inMemoryQueryLogs.reduce((acc, q) => acc + (q.responseTimeMs || 100), 0) / total)
-            : 110;
-
+        const analytics = await getRealAnalytics();
         res.json({
             success: true,
-            totalQueries: total || 18,
-            unresolvedQueries: unresolved || 2,
-            avgResponseTime: `${avgTime}ms`,
-            recentQueries: inMemoryQueryLogs.slice(-10).reverse(),
-            source: 'in-memory'
+            ...analytics
         });
     } catch (err) {
-        res.json({
-            success: true,
-            totalQueries: inMemoryQueryLogs.length,
-            unresolvedQueries: 0,
-            avgResponseTime: '110ms',
-            recentQueries: inMemoryQueryLogs,
-            source: 'in-memory-fallback'
-        });
+        console.error('Analytics error:', err);
+        res.status(500).json({ success: false, error: err.message });
     }
 });
 
@@ -222,17 +308,30 @@ async function startServer() {
         });
         console.log('✓ MongoDB Connected Successfully!');
 
-        // Check if DB is already seeded, if not, auto-seed with the 3 dummy entries
+        // Check if DB is already seeded, if not, auto-seed with all inMemoryDocuments
         const count = await Document.countDocuments();
         if (count === 0) {
-            console.log('Knowledge base is empty. Auto-seeding 3 dummy documents...');
-            for (const doc of dummyDocuments) {
-                for (const chunk of doc.chunks) {
-                    chunk.embedding = generateLocalEmbedding(`${chunk.sectionTitle} ${chunk.content} ${(chunk.keywords || []).join(' ')}`);
-                }
-                await Document.create(doc);
+            console.log(`Knowledge base in MongoDB is empty. Seeding ${inMemoryDocuments.length} documents...`);
+            for (const doc of inMemoryDocuments) {
+                const docToSave = {
+                    title: doc.title,
+                    filename: doc.filename,
+                    fileSize: doc.fileSize,
+                    course: doc.course,
+                    category: doc.category,
+                    isActive: true,
+                    uploadDate: doc.uploadDate || new Date(),
+                    chunks: (doc.chunks || []).map(chunk => ({
+                        chunkId: chunk.chunkId,
+                        sectionTitle: chunk.sectionTitle,
+                        content: chunk.content,
+                        keywords: chunk.keywords,
+                        embedding: chunk.embedding || generateLocalEmbedding(`${chunk.sectionTitle} ${chunk.content} ${(chunk.keywords || []).join(' ')}`)
+                    }))
+                };
+                await Document.create(docToSave);
             }
-            console.log('✓ 3 Dummy documents created in MongoDB successfully!');
+            console.log(`✓ ${inMemoryDocuments.length} documents indexed into MongoDB successfully!`);
         } else {
             console.log(`✓ Found ${count} active documents in MongoDB knowledge base.`);
         }

@@ -16,7 +16,7 @@
     box-sizing: border-box;
 }
 
-body {
+.login-page-wrapper {
     font-family: var(--font-body);
     color: var(--text-primary);
     background-color: #ffffff;
@@ -25,6 +25,7 @@ body {
     align-items: center;
     min-height: 100vh;
     padding: 2rem;
+    width: 100%;
 }
 
 .login-container {

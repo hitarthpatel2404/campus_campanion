@@ -21,9 +21,8 @@ body {
     font-family: var(--font-body);
     color: var(--text-primary);
     background-color: #ffffff;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+    margin: 0;
+    padding: 0;
 }
 
 .app-layout {
@@ -75,6 +74,29 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
+}
+
+.btn-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #dc2626;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border-color: #fca5a5;
+    transform: translateY(-1px);
 }
 
 /* Main Container */
@@ -181,6 +203,7 @@ body {
 
 .chat-history {
     flex: 1;
+    overflow-x: hidden;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -223,6 +246,8 @@ body {
     font-size: 0.95rem;
     line-height: 1.6;
     color: var(--text-secondary);
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 /* Input Area */
@@ -419,6 +444,21 @@ body {
     overflow-x: auto;
     padding-bottom: 0.5rem;
     margin-bottom: 0.75rem;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.quick-prompts-bar::-webkit-scrollbar {
+    height: 4px;
+}
+
+.quick-prompts-bar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.quick-prompts-bar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
 }
 
 .quick-prompt-btn {

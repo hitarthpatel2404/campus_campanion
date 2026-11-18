@@ -12,14 +12,22 @@ function tokenize(text) {
         .toLowerCase()
         .replace(/[^a-z0-9\s]/g, ' ')
         .split(/\s+/)
-        .filter(w => w.length > 2);
+        .filter(w => {
+            if (!w) return false;
+            // Allow 2-letter course codes like ML, SS, AD, DT, VP, 2C, 4B, 3A, C1, B1
+            if (w.length >= 2) return true;
+            // Allow numbers (1, 2, 3) and Roman numeral units (i, v, x)
+            if (/^[0-9]+$/.test(w) || w === 'i' || w === 'v' || w === 'x') return true;
+            return false;
+        });
 }
 
 // Stopwords to filter out low-information words
 const STOPWORDS = new Set([
     'the', 'is', 'at', 'which', 'on', 'and', 'a', 'an', 'in', 'to', 'for', 'of',
     'or', 'by', 'with', 'from', 'as', 'that', 'this', 'are', 'was', 'be', 'has',
-    'have', 'had', 'you', 'your', 'can', 'will', 'what', 'when', 'where', 'how'
+    'have', 'had', 'you', 'your', 'can', 'will', 'what', 'when', 'where', 'how',
+    'give', 'me', 'tell', 'show', 'about', 'please'
 ]);
 
 function hashWordToIdx(word, dim) {
@@ -101,17 +109,29 @@ function findRelevantChunks(query, documents, topK = 3) {
                 sim = cosineSimilarity(queryVector, chunkVec);
             }
 
-            // Keyword boost for exact acronyms, numbers, course codes (e.g. CS101, 10%, Dec 10)
+            // Keyword boost for exact acronyms, numbers, course codes (e.g. WAD, ML, Unit 1, Unit I)
             let keywordMatches = 0;
             const contentLower = (chunk.content + ' ' + chunk.sectionTitle + ' ' + (chunk.keywords || []).join(' ')).toLowerCase();
+            const docTitleLower = ((doc.title || '') + ' ' + (doc.course || '') + ' ' + (doc.filename || '')).toLowerCase();
+
             queryTokens.forEach(token => {
                 if (contentLower.includes(token)) {
                     keywordMatches++;
                 }
+                if (docTitleLower.includes(token)) {
+                    keywordMatches += 1.5;
+                }
+                // Handle 1 <-> i mapping for Unit 1 / Unit I
+                if (token === '1' && (contentLower.includes('unit i') || docTitleLower.includes('unit i'))) {
+                    keywordMatches += 2;
+                }
+                if (token === 'i' && (contentLower.includes('unit 1') || docTitleLower.includes('unit 1'))) {
+                    keywordMatches += 2;
+                }
             });
 
-            const keywordBoost = queryTokens.length > 0 ? (keywordMatches / queryTokens.length) * 0.4 : 0;
-            const finalScore = Number((sim * 0.6 + keywordBoost).toFixed(4));
+            const keywordBoost = queryTokens.length > 0 ? (keywordMatches / queryTokens.length) * 0.5 : 0;
+            const finalScore = Number((sim * 0.5 + keywordBoost).toFixed(4));
 
             scoredChunks.push({
                 docId: doc._id,

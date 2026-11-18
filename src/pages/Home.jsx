@@ -1,42 +1,245 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { 
+    GraduationCap, 
+    Lock, 
+    Clock, 
+    Calendar, 
+    CheckCircle2, 
+    ShieldCheck, 
+    LogOut,
+    ChevronRight
+} from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { TIMETABLE_BY_DAY } from '../data/scheduleData';
+import heroBg from '../assets/hero-bg.jpg';
 import '../styles/styles.css';
 
 const Home = () => {
     const navigate = useNavigate();
+    const { user, isLoggedIn, logout } = useAuth();
+    const [previewDay, setPreviewDay] = useState('THU');
 
     return (
-        <div>
-            <nav className="floating-nav">
-                <div className="nav-container">
-                    <div className="logo">CAMPUS COMPANION</div>
-                    <div className="nav-actions">
-                        <Link to="/login" className="btn-nav-link">Login</Link>
-                        <Link to="/signup" className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>Sign Up</Link>
+        <div style={{ backgroundColor: '#ffffff', minHeight: '100vh' }}>
+            {/* Mint-Style Top Navbar */}
+            <nav className="mint-navbar">
+                <div className="mint-nav-container">
+                    <div className="mint-logo" onClick={() => navigate('/')}>
+                        <GraduationCap className="mint-logo-icon" />
+                        <span>campus companion</span>
+                    </div>
+
+                    <ul className="mint-nav-links">
+                        <li>
+                            <a href="#how-it-works" className="mint-nav-link">How It Works</a>
+                        </li>
+                        <li>
+                            <a href="#timetable" className="mint-nav-link">Timetable</a>
+                        </li>
+                    </ul>
+
+                    <div className="mint-nav-actions">
+                        {isLoggedIn ? (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                <span style={{ fontSize: '0.85rem', color: '#4b5563', fontWeight: 600 }}>
+                                    Hi, {user?.username || 'Student'}
+                                </span>
+                                <Link to="/dashboard" className="mint-nav-link" style={{ fontWeight: 700, color: '#0f172a' }}>
+                                    Dashboard
+                                </Link>
+                                <button 
+                                    className="btn-logout" 
+                                    onClick={logout}
+                                    title="Log Out"
+                                >
+                                    <LogOut size={15} />
+                                    <span>Log Out</span>
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                <Link to="/login" className="mint-nav-login">
+                                    <Lock size={15} />
+                                    <span>Login</span>
+                                </Link>
+                                <button 
+                                    className="mint-btn-orange"
+                                    onClick={() => navigate('/signup')}
+                                >
+                                    Sign Up
+                                </button>
+                            </>
+                        )}
                     </div>
                 </div>
             </nav>
 
-            <main style={{ paddingTop: '6rem' }}>
-                <section className="hero container" style={{ 
-                    textAlign: 'center', 
-                    marginTop: '8rem', 
-                    marginBottom: '5rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    minHeight: '30vh',
-                    background: '#ffffff',
-                    position: 'relative',
-                    zIndex: 10
-                }}>
-                    <h1 style={{ fontSize: '3.5rem', fontWeight: '600', color: '#1a1a1a', marginBottom: '1.5rem' }}>Your AI-Powered Study Partner</h1>
-                    <p className="hero-subtitle" style={{ fontSize: '1.1rem', color: '#4a4a4a', maxWidth: '600px', margin: '0 auto', lineHeight: '1.6' }}>
-                        Upload your syllabus, lecture notes, and assignments. Get instant, context-aware answers grounded in your actual course materials.
-                    </p>
-                </section>
+            {/* Mint-Style Photography Hero Section */}
+            <header 
+                className="mint-hero" 
+                style={{ 
+                    backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.82)), url(${heroBg})` 
+                }}
+            >
+                <div className="mint-hero-eyebrow">
+                    BE GOOD WITH YOUR STUDIES
+                </div>
 
+                <h1 className="mint-hero-title">
+                    SO YOU CAN BE CONFIDENT WITH EVERY CLASS &amp; EXAM
+                </h1>
+
+                <p className="mint-hero-subtitle">
+                    Get your syllabus-grounded AI companion and start making academic success a reality. Instant answers directly from your verified course documents.
+                </p>
+
+                <div className="mint-hero-cta-group">
+                    <button 
+                        className="mint-hero-btn-main"
+                        onClick={() => navigate(isLoggedIn ? '/dashboard' : '/signup')}
+                    >
+                        <Lock size={16} />
+                        <span>{isLoggedIn ? 'GO TO DASHBOARD' : 'SIGN UP FREE'}</span>
+                    </button>
+                </div>
+
+                {/* Downward Notch Pointer Arrow matching Mint screenshot */}
+                <div className="mint-hero-notch"></div>
+            </header>
+
+            {/* Mint 3-Column Features Section */}
+            <section className="mint-features-section" id="how-it-works">
+                <div className="mint-features-container">
+                    {/* Column 1: Bills? Paid -> Syllabus? Verified */}
+                    <div className="mint-feature-col">
+                        <h3>Syllabus? Verified</h3>
+                        <p>
+                            Don't guess course policies again. Upload your CS101, WAD, and ML syllabi to get verified answers with direct citations.
+                        </p>
+                        <span className="mint-feature-tag">
+                            <CheckCircle2 size={13} /> 100% Grounded Context
+                        </span>
+                    </div>
+
+                    {/* Column 2: All-in-one? Done -> Timetable? Synced */}
+                    <div className="mint-feature-col">
+                        <h3>Timetable? Synced</h3>
+                        <p>
+                            From daily lecture hours to lab batches (B1, B2, B3) and faculty rooms (402, 201, 303B)—get your daily classes organized in one place.
+                        </p>
+                        <span className="mint-feature-tag">
+                            <Calendar size={13} /> Official W.E.F Schedule
+                        </span>
+                    </div>
+
+                    {/* Column 3: Credit? Checked -> Deadlines? Aced (with top speech pointer) */}
+                    <div className="mint-feature-col mint-pointer-bubble">
+                        <h3>Deadlines? Aced</h3>
+                        <p>
+                            Track assignment submissions, quiz weightages, and late submission grace period rules before penalty marks are deducted.
+                        </p>
+                        <span className="mint-feature-tag">
+                            <ShieldCheck size={13} /> Zero Hallucinations
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            {/* Timetable Quick Glance on Home Page */}
+            <section className="container" id="timetable" style={{ margin: '4rem auto' }}>
+                <div className="timetable-preview-banner">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
+                        <div>
+                            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#10b981', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                                LIVE ACADEMIC TIMETABLE
+                            </span>
+                            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#111827', margin: '0.25rem 0' }}>
+                                Weekly Class &amp; Lab Schedule
+                            </h2>
+                            <p style={{ color: '#6b7280', fontSize: '0.9rem', margin: 0 }}>
+                                Official classroom schedule (w.e.f. 05/08/2026). Select a day to preview classes:
+                            </p>
+                        </div>
+                        <button 
+                            className="btn btn-primary"
+                            onClick={() => navigate('/dashboard')}
+                            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                        >
+                            <span>Open Full Schedule in Dashboard</span>
+                            <ChevronRight size={16} />
+                        </button>
+                    </div>
+
+                    {/* Day selector tabs */}
+                    <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                        {['MON', 'TUE', 'WED', 'THU', 'FRI'].map((day) => (
+                            <button
+                                key={day}
+                                onClick={() => setPreviewDay(day)}
+                                style={{
+                                    padding: '0.5rem 1.25rem',
+                                    fontSize: '0.85rem',
+                                    fontWeight: 700,
+                                    borderRadius: '6px',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    background: previewDay === day ? '#0f172a' : '#ffffff',
+                                    color: previewDay === day ? '#ffffff' : '#4b5563',
+                                    boxShadow: previewDay === day ? '0 4px 10px rgba(15,23,42,0.2)' : '0 1px 3px rgba(0,0,0,0.05)',
+                                    transition: 'all 0.15s ease'
+                                }}
+                            >
+                                {TIMETABLE_BY_DAY[day]?.dayName} ({day})
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Preview Cards Grid */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+                        {(TIMETABLE_BY_DAY[previewDay]?.items || []).slice(0, 4).map((slot, sIdx) => (
+                            <div 
+                                key={sIdx}
+                                style={{
+                                    background: slot.type === 'break' ? '#fefce8' : '#ffffff',
+                                    border: slot.type === 'break' ? '1px solid #fef08a' : '1px solid #e5e7eb',
+                                    borderLeft: `4px solid ${slot.color || '#4f46e5'}`,
+                                    padding: '1rem',
+                                    borderRadius: '8px',
+                                    boxShadow: '0 1px 3px rgba(0,0,0,0.04)'
+                                }}
+                            >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                                    <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#6b7280', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                        <Clock size={12} /> {slot.time}
+                                    </span>
+                                    <span style={{ 
+                                        fontSize: '0.7rem', 
+                                        fontWeight: 700, 
+                                        padding: '0.15rem 0.5rem', 
+                                        borderRadius: '4px', 
+                                        background: slot.type === 'break' ? '#fde047' : '#f1f5f9',
+                                        color: slot.type === 'break' ? '#854d0e' : '#1e293b'
+                                    }}>
+                                        {slot.course}
+                                    </span>
+                                </div>
+                                <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#111827' }}>
+                                    {slot.title}
+                                </div>
+                                {slot.location && (
+                                    <div style={{ fontSize: '0.78rem', color: '#6b7280', marginTop: '0.3rem' }}>
+                                        📍 {slot.location} {slot.faculty ? `• Prof. ${slot.faculty}` : ''}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* RAG Feature Box */}
+            <main>
                 <section className="feature-highlight container">
                     <div className="feature-box">
                         <div className="feature-box-header">
@@ -82,7 +285,9 @@ const Home = () => {
                 <section className="bottom-cta container">
                     <div className="bottom-cta-divider"></div>
                     <h2>Ready to study smarter?</h2>
-                    <button className="btn btn-primary" onClick={() => navigate('/signup')}>Get Started</button>
+                    <button className="mint-btn-orange" style={{ padding: '0.85rem 2rem', fontSize: '1rem' }} onClick={() => navigate('/signup')}>
+                        Get Started Free
+                    </button>
                 </section>
 
                 <section className="contact-section container">
