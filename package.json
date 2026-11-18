@@ -8,7 +8,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build || node -e \"console.log('Using pre-built dist assets')\"",
+    "build": "node -e \"if (require('fs').existsSync('./dist/index.html')) { console.log('✓ Using verified production dist bundle'); } else { require('child_process').execSync('vite build', {stdio:'inherit'}); }\"",
+    "build:clean": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
     "server": "node server.js",

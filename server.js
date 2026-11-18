@@ -8,7 +8,7 @@ require('dotenv').config();
 const dns = require('dns');
 try {
     dns.setServers(['8.8.8.8', '8.8.4.4']);
-} catch (e) {}
+} catch (e) { }
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -20,14 +20,14 @@ const path = require('path');
 
 const Document = require('./models/Document');
 const QueryLog = require('./models/QueryLog');
-const { 
-    processRagQuery, 
-    indexAndSaveDocument, 
-    deleteDocument, 
-    getRealAnalytics, 
+const {
+    processRagQuery,
+    indexAndSaveDocument,
+    deleteDocument,
+    getRealAnalytics,
     resetPersistedDocuments,
     inMemoryDocuments,
-    inMemoryQueryLogs 
+    inMemoryQueryLogs
 } = require('./services/ragService');
 const { dummyDocuments } = require('./seed');
 const { generateLocalEmbedding } = require('./services/embeddingService');
@@ -43,7 +43,6 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 const distPath = path.join(__dirname, 'dist');
 app.use(express.static(distPath));
-app.use(express.static(path.join(__dirname)));
 
 // 1. Health & Status
 app.get('/api/health', async (req, res) => {
@@ -110,7 +109,7 @@ app.get('/api/documents', async (req, res) => {
 app.post('/api/documents/upload', async (req, res) => {
     try {
         const { title, filename, fileSize, course, category, content } = req.body;
-        
+
         if (!content || typeof content !== 'string' || content.trim().length === 0) {
             return res.status(400).json({ success: false, error: 'Document text content is required for indexing.' });
         }
@@ -163,7 +162,7 @@ app.post('/api/documents/extract', async (req, res) => {
             const { PDFParse } = require('pdf-parse');
             const parser = new PDFParse({ data: fileBuffer });
             const result = await parser.getText();
-            await parser.destroy().catch(() => {});
+            await parser.destroy().catch(() => { });
 
             let fullText = '';
             if (result.pages && Array.isArray(result.pages) && result.pages.length > 0) {

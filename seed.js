@@ -9,7 +9,7 @@ const dns = require('dns');
 // Use reliable public DNS to prevent Windows querySrv ECONNREFUSED with MongoDB Atlas
 try {
     dns.setServers(['8.8.8.8', '8.8.4.4']);
-} catch (e) {}
+} catch (e) { }
 
 const mongoose = require('mongoose');
 const Document = require('./models/Document');
@@ -107,7 +107,7 @@ const dummyDocuments = [
 async function seedDatabase() {
     console.log("--------------------------------------------------");
     console.log("Connecting to MongoDB at:", MONGODB_URI);
-    
+
     try {
         await mongoose.connect(MONGODB_URI);
         console.log("✓ Successfully connected to MongoDB!");
@@ -118,7 +118,7 @@ async function seedDatabase() {
 
         // Compute embeddings for all chunks in the 3 dummy entries
         console.log("\nGenerating semantic embeddings and inserting 3 dummy documents...");
-        
+
         for (const doc of dummyDocuments) {
             for (const chunk of doc.chunks) {
                 const textToEmbed = `${chunk.sectionTitle} ${chunk.content} ${(chunk.keywords || []).join(' ')}`;
