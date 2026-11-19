@@ -96,7 +96,7 @@ npm run build
 npm start
 ```
 
-Open your browser at: **[http://localhost:5000](http://localhost:5000)**
+Open your browser at: **https://campus-campanion.onrender.com**
 
 ---
 
@@ -163,5 +163,3 @@ Open your browser at: **[http://localhost:5000](http://localhost:5000)**
 
 ---
 
-## 📜 License
-This project is open-source under the MIT License.
