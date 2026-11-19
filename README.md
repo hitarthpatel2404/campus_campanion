@@ -1,6 +1,6 @@
 # 🎓 AI Campus Companion (RAG & MongoDB)
 
-> A modern, full-stack academic assistant powered by **Retrieval-Augmented Generation (RAG)**, **MongoDB vector storage**, and **React 19**. Provides verified course-grounded answers, intelligent timetable tracking, PDF document indexing, and real-time faculty analytics.
+> A modern, full-stack academic assistant built with **React 19**, **MongoDB Vector Search**, and **Retrieval-Augmented Generation (RAG)**. It delivers accurate, course-specific answers, smart timetable management, PDF-based knowledge retrieval, and real-time faculty insights.
 
 ---
 
